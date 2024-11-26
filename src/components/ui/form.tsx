@@ -86,10 +86,14 @@ const FormItem = React.forwardRef<
 })
 FormItem.displayName = "FormItem"
 
+interface FormLabelProps extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
+  optional?: boolean;
+}
+
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
+  FormLabelProps
+>(({ className, optional = true, children, ...props }, ref) => {
   const { error, formItemId } = useFormField()
 
   return (
@@ -98,10 +102,14 @@ const FormLabel = React.forwardRef<
       className={cn(error && "text-destructive", className)}
       htmlFor={formItemId}
       {...props}
-    />
+    >
+      {children}
+      {!optional && <span className="text-destructive ml-1">*</span>}
+    </Label>
   )
 })
 FormLabel.displayName = "FormLabel"
+
 
 const FormControl = React.forwardRef<
   React.ElementRef<typeof Slot>,

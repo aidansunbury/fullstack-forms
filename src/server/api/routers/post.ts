@@ -1,39 +1,34 @@
-import { z } from "zod";
-
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { TRPCError } from "@trpc/server";
+import { desc } from "drizzle-orm";
+import { safeInsertSchema } from "~/lib/safeInsertSchema";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { db } from "~/server/db";
 import { posts } from "~/server/db/schema";
 
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
+  create: publicProcedure
+    .input(safeInsertSchema(posts))
+    .mutation(async ({ input }) => {
+      const randomError = Math.random() < 0.33;
+      if (randomError) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Random 1/3 chance server error, try again",
+        });
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const [post] = await db.insert(posts).values(input).returning();
+      return post;
     }),
 
-  create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(posts).values({
-        name: input.name,
-        createdById: ctx.session.user.id,
-      });
-    }),
-
-  getLatest: protectedProcedure.query(async ({ ctx }) => {
-    const post = await ctx.db.query.posts.findFirst({
-      orderBy: (posts, { desc }) => [desc(posts.createdAt)],
-    });
-
-    return post ?? null;
-  }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+  list: publicProcedure.query(async () => {
+    const recentPosts = await db
+      .select()
+      .from(posts)
+      .orderBy(desc(posts.createdAt))
+      .limit(10);
+    return recentPosts;
   }),
 });
