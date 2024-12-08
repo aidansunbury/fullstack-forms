@@ -23,13 +23,13 @@ export default async function Home() {
         <ModeToggle />
       </div>
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="font-extrabold text-5xl tracking-tight sm:text-[5rem]">
-          Full Stack Forms
-        </h1>
-        <p>
+        <h1 className="font-extrabold text-5xl">Full Stack Forms</h1>
+        <h3 className="font-normal text-lg w-80">
           Starter code for a basic controlled forms to quickly copy and paste
-          into your project.
-        </p>
+          into your project. Assumes you are starting with a t3 app using
+          drizzle-orm.
+        </h3>
+
         <div className="flex flex-row space-x-4">
           <CopyButton text={basicFile}>Copy Basic Form File</CopyButton>
           <CopyButton text={dialogFile}>Copy Dialog Form File</CopyButton>

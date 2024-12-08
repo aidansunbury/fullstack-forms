@@ -14,7 +14,7 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `fullstack-forms_${name}`);
+export const createTable = pgTableCreator((name) => `${name}`);
 
 export const categories = pgEnum("category", ["TypeScript", "Python", "C++"]);
 

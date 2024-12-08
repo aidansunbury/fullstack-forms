@@ -210,7 +210,7 @@ export function BasicForm() {
               Reset
             </Button>
 
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} loading={isPending}>
               Create Expense
             </Button>
           </div>
