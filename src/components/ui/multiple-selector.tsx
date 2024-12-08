@@ -248,7 +248,9 @@ export const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSe
             if (input.value === '' && selected.length > 0) {
               const lastSelectOption = selected[selected.length - 1];
               // If last item is fixed, we should not remove it.
+              // @ts-ignore
               if (!lastSelectOption.fixed) {
+                // @ts-ignore
                 handleUnselect(selected[selected.length - 1]);
               }
             }

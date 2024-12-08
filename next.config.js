@@ -5,14 +5,6 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.tsx$/,
-      use: "raw-loader",
-    });
-    return config;
-  },
-};
+const config = {};
 
 export default config;

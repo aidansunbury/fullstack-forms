@@ -49,10 +49,13 @@ export function BasicForm() {
       })
       .array()
       .transform((val) => val.map((v) => v.value)),
-  }); //* Replace me with your db table
+  });
+
+  // TODO: Replace me with your db table
   type FormType = z.infer<typeof formValidator>;
+
+  //TODO: Replace me with your default values
   const defaultValues: FormType = {
-    //* Replace me with your default values
     name: "",
     category: "" as FormType["category"],
     notes: "",
@@ -97,34 +100,30 @@ export function BasicForm() {
   };
 
   const OPTIONS: Option[] = [
-    { label: "nextjs", value: "Nextjs" },
     { label: "React", value: "react" },
     { label: "Remix", value: "remix" },
     { label: "Vite", value: "vite" },
-    { label: "Nuxt", value: "nuxt" },
     { label: "Vue", value: "vue" },
-    { label: "Svelte", value: "svelte" },
-    { label: "Angular", value: "angular" },
-    { label: "Ember", value: "ember" },
-    { label: "Gatsby", value: "gatsby" },
-    { label: "Astro", value: "astro" },
   ];
 
   return (
     <div className="w-80">
       <Form {...form}>
-        <form onSubmit={handleSubmit(onValidationSuccess, onValidationError)}>
+        <form
+          onSubmit={handleSubmit(onValidationSuccess, onValidationError)}
+          className="space-y-4"
+        >
           {/* Input */}
           <FormField
             control={control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel optional={false}>Text Input</FormLabel>
+                <FormLabel optional={false}>Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Basic text input" {...field} />
                 </FormControl>
-                <FormDescription>You may change this later</FormDescription>
+                <FormDescription>A required text input</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -136,7 +135,7 @@ export function BasicForm() {
             name="category"
             render={({ field }) => (
               <FormItem>
-                <FormLabel optional={false}>Post category</FormLabel>
+                <FormLabel optional={false}>Category</FormLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
@@ -152,7 +151,7 @@ export function BasicForm() {
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  You can manage email addresses in your
+                  A required single select input
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -167,9 +166,10 @@ export function BasicForm() {
               <FormItem>
                 <FormLabel>Notes</FormLabel>
                 <FormControl>
+                  {/* @ts-ignore */}
                   <Input placeholder="Basic text input" {...field} />
                 </FormControl>
-                <FormDescription>This field is optional</FormDescription>
+                <FormDescription>Optional Text Input</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -181,21 +181,23 @@ export function BasicForm() {
             name="tags"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notes</FormLabel>
+                <FormLabel>Tags</FormLabel>
                 <FormControl>
                   <MultipleSelector
-                    value={field.value}
+                    value={field.value as unknown as Option[]}
                     onChange={field.onChange}
                     defaultOptions={OPTIONS}
                     placeholder="Select frameworks you like..."
                     emptyIndicator={
-                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                        no results found.
+                      <p className="text-center text-gray-600 text-lg leading-10 dark:text-gray-400">
+                        No results found.
                       </p>
                     }
                   />
                 </FormControl>
-                <FormDescription>This field is optional</FormDescription>
+                <FormDescription>
+                  A controlled multi-selector component
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

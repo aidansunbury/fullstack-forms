@@ -12,6 +12,10 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  MultipleSelector,
+  type Option,
+} from "@/components/ui/multiple-selector";
 
 import {
   Form,
@@ -50,13 +54,24 @@ export function DialogForm() {
 
   const formValidator = safeInsertSchema(posts).extend({
     name: z.string().min(1),
-  }); //* Replace me with your db table
+    tags: z
+      .object({
+        value: z.string(),
+        label: z.string(),
+      })
+      .array()
+      .transform((val) => val.map((v) => v.value)),
+  });
+
+  // TODO: Replace me with your db table
   type FormType = z.infer<typeof formValidator>;
+
+  //TODO: Replace me with your default values
   const defaultValues: FormType = {
-    // TODO Replace me with your default values
     name: "",
     category: "" as FormType["category"],
     notes: "",
+    tags: [],
   };
 
   const { toast } = useToast();
@@ -79,7 +94,7 @@ export function DialogForm() {
       });
       form.reset(defaultValues);
       setOpen(false);
-      utils.post.list.invalidate(); //* Replace me with your invalidation
+      utils.post.list.invalidate(); // TOD0: Replace me with your invalidation
     },
     onError: (error) => {
       toast({
@@ -97,6 +112,14 @@ export function DialogForm() {
   const onValidationError: SubmitErrorHandler<FormType> = (errors) => {
     console.log(errors);
   };
+
+  const OPTIONS: Option[] = [
+    { label: "React", value: "react" },
+    { label: "Remix", value: "remix" },
+    { label: "Vite", value: "vite" },
+    { label: "Vue", value: "vue" },
+  ];
+
   return (
     <Dialog
       open={isOpen}
@@ -139,11 +162,11 @@ export function DialogForm() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel optional={false}>Text Input</FormLabel>
+                    <FormLabel optional={false}>Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Basic text input" {...field} />
                     </FormControl>
-                    <FormDescription>You may change this later</FormDescription>
+                    <FormDescription>A required text input</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -155,7 +178,7 @@ export function DialogForm() {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel optional={false}>Post category</FormLabel>
+                    <FormLabel optional={false}>Category</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
@@ -171,12 +194,14 @@ export function DialogForm() {
                       </SelectContent>
                     </Select>
                     <FormDescription>
-                      You can manage email addresses in your
+                      A required single select input
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Optional Input */}
               <FormField
                 control={control}
                 name="notes"
@@ -184,14 +209,43 @@ export function DialogForm() {
                   <FormItem>
                     <FormLabel>Notes</FormLabel>
                     <FormControl>
+                      {/* @ts-ignore */}
                       <Input placeholder="Basic text input" {...field} />
                     </FormControl>
-                    <FormDescription>This field is optional</FormDescription>
+                    <FormDescription>Optional Text Input</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="flex flex-row justify-between mt-4">
+
+              {/* Multiple Selector */}
+              <FormField
+                control={control}
+                name="tags"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tags</FormLabel>
+                    <FormControl>
+                      <MultipleSelector
+                        value={field.value as unknown as Option[]}
+                        onChange={field.onChange}
+                        defaultOptions={OPTIONS}
+                        placeholder="Select frameworks you like..."
+                        emptyIndicator={
+                          <p className="text-center text-gray-600 text-lg leading-10 dark:text-gray-400">
+                            No results found.
+                          </p>
+                        }
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      A controlled multi-selector component
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="mt-4 flex flex-row justify-between">
                 <Button
                   type="button"
                   onClick={() => form.reset(defaultValues)}
