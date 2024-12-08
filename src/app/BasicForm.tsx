@@ -2,6 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  MultipleSelector,
+  type Option,
+} from "@/components/ui/multiple-selector";
 
 import {
   Form,
@@ -38,6 +42,13 @@ import { categories, posts } from "@/server/db/schema"; //* Replace me with your
 export function BasicForm() {
   const formValidator = safeInsertSchema(posts).extend({
     name: z.string().min(1),
+    tags: z
+      .object({
+        value: z.string(),
+        label: z.string(),
+      })
+      .array()
+      .transform((val) => val.map((v) => v.value)),
   }); //* Replace me with your db table
   type FormType = z.infer<typeof formValidator>;
   const defaultValues: FormType = {
@@ -45,6 +56,7 @@ export function BasicForm() {
     name: "",
     category: "" as FormType["category"],
     notes: "",
+    tags: [],
   };
 
   const { toast } = useToast();
@@ -83,6 +95,20 @@ export function BasicForm() {
   const onValidationError: SubmitErrorHandler<FormType> = (errors) => {
     console.log(errors);
   };
+
+  const OPTIONS: Option[] = [
+    { label: "nextjs", value: "Nextjs" },
+    { label: "React", value: "react" },
+    { label: "Remix", value: "remix" },
+    { label: "Vite", value: "vite" },
+    { label: "Nuxt", value: "nuxt" },
+    { label: "Vue", value: "vue" },
+    { label: "Svelte", value: "svelte" },
+    { label: "Angular", value: "angular" },
+    { label: "Ember", value: "ember" },
+    { label: "Gatsby", value: "gatsby" },
+    { label: "Astro", value: "astro" },
+  ];
 
   return (
     <div className="w-80">
@@ -132,6 +158,8 @@ export function BasicForm() {
               </FormItem>
             )}
           />
+
+          {/* Optional Input */}
           <FormField
             control={control}
             name="notes"
@@ -146,6 +174,33 @@ export function BasicForm() {
               </FormItem>
             )}
           />
+
+          {/* Multiple Selector */}
+          <FormField
+            control={control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notes</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    value={field.value}
+                    onChange={field.onChange}
+                    defaultOptions={OPTIONS}
+                    placeholder="Select frameworks you like..."
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        no results found.
+                      </p>
+                    }
+                  />
+                </FormControl>
+                <FormDescription>This field is optional</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className="flex w-full flex-row justify-between">
             <Button
               type="button"

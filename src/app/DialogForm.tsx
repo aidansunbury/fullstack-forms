@@ -53,7 +53,7 @@ export function DialogForm() {
   }); //* Replace me with your db table
   type FormType = z.infer<typeof formValidator>;
   const defaultValues: FormType = {
-    //* Replace me with your default values
+    // TODO Replace me with your default values
     name: "",
     category: "" as FormType["category"],
     notes: "",

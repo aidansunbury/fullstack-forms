@@ -5,6 +5,7 @@ import { DialogForm } from "./DialogForm";
 import { Feed } from "./Feed";
 import { promises as fs } from "node:fs";
 import { CopyButton } from "~/components/ui/copy-button";
+import { ModeToggle } from "~/components/theme-toggle";
 
 export default async function Home() {
   const dialogFile = await fs.readFile(
@@ -17,7 +18,10 @@ export default async function Home() {
   );
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b ">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b bg-neutral-50 dark:bg-neutral-900">
+      <div className="absolute top-4 right-4">
+        <ModeToggle />
+      </div>
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <h1 className="font-extrabold text-5xl tracking-tight sm:text-[5rem]">
           Full Stack Forms

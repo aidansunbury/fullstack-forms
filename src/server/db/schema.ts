@@ -25,6 +25,7 @@ export const posts = createTable(
     name: varchar("name", { length: 256 }).notNull(),
     notes: text("notes"),
     category: categories("category").notNull(),
+    tags: text("tags").array().notNull(),
     createdAt: integer("createdAt")
       .notNull()
       .default(sql`extract(epoch from now())`),
