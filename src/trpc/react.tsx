@@ -8,9 +8,9 @@ import { useState } from "react";
 import SuperJSON from "superjson";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { CopyProvider } from "~/components/ui/copy-provider";
 import type { AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
-import { CopyProvider } from "~/components/ui/copy-provider";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {

@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { desc } from "drizzle-orm";
+import { z } from "zod";
 import { safeInsertSchema } from "~/lib/safeInsertSchema";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
 import { posts } from "~/server/db/schema";
-import { z } from "zod";
 
 export const postRouter = createTRPCRouter({
   create: publicProcedure

@@ -16,7 +16,12 @@ import {
  */
 export const createTable = pgTableCreator((name) => `${name}`);
 
-export const categories = pgEnum("category", ["TypeScript", "Python", "C++"]);
+export const categories = pgEnum("category", [
+  "TypeScript",
+  "Python",
+  "C++",
+  "Go",
+]);
 
 export const posts = createTable(
   "post",

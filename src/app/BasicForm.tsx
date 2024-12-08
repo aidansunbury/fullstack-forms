@@ -33,8 +33,8 @@ import {
 } from "react-hook-form";
 
 import { useToast } from "@/hooks/use-toast";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { safeInsertSchema } from "@/lib/safeInsertSchema";
 import { categories, posts } from "@/server/db/schema"; //* Replace me with your db table
@@ -85,7 +85,7 @@ export function BasicForm() {
     },
     onError: (error) => {
       toast({
-        title: `${error.data?.code}`,
+        title: error.data?.code ?? "Error",
         description: error.message,
       });
     },
@@ -213,7 +213,7 @@ export function BasicForm() {
             </Button>
 
             <Button type="submit" disabled={isPending} loading={isPending}>
-              Create Expense
+              Submit
             </Button>
           </div>
         </form>

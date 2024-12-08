@@ -1,6 +1,4 @@
 "use client";
-import { useState } from "react";
-import { useBeforeunload } from "react-beforeunload";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +7,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useState } from "react";
+import { useBeforeunload } from "react-beforeunload";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,8 +43,8 @@ import {
 } from "react-hook-form";
 
 import { useToast } from "@/hooks/use-toast";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { safeInsertSchema } from "@/lib/safeInsertSchema";
 import { categories, posts } from "@/server/db/schema"; //* Replace me with your db table
@@ -98,7 +98,7 @@ export function DialogForm() {
     },
     onError: (error) => {
       toast({
-        title: `${error.data?.code}`,
+        title: error.data?.code ?? "Error",
         description: error.message,
       });
     },
@@ -265,8 +265,12 @@ export function DialogForm() {
                     Cancel
                   </Button>
 
-                  <Button type="submit" disabled={isPending}>
-                    Create Expense
+                  <Button
+                    type="submit"
+                    disabled={isPending}
+                    loading={isPending}
+                  >
+                    Submit
                   </Button>
                 </div>
               </div>
