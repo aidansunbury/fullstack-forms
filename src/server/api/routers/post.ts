@@ -4,10 +4,17 @@ import { safeInsertSchema } from "~/lib/safeInsertSchema";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
 import { posts } from "~/server/db/schema";
+import { z } from "zod";
 
 export const postRouter = createTRPCRouter({
   create: publicProcedure
-    .input(safeInsertSchema(posts))
+    .input(
+      safeInsertSchema(posts).extend({
+        // This is needed because of a bug in drizzle-zod
+        // https://github.com/drizzle-team/drizzle-orm/issues/1110
+        tags: z.string().array(),
+      }),
+    )
     .mutation(async ({ input }) => {
       const randomError = Math.random() < 0.33;
       if (randomError) {
